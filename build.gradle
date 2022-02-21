@@ -1,0 +1,39 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.6.3'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+}
+
+group 'com.corekcioglu'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    implementation "org.springframework.boot:spring-boot-starter-webflux"
+    implementation "org.springframework.boot:spring-boot-starter-security"
+    implementation "io.projectreactor:reactor-tools"
+
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.springframework.security:spring-security-test"
+    testImplementation "io.projectreactor:reactor-test"
+    testImplementation "io.projectreactor.tools:blockhound-junit-platform:1.0.6.RELEASE"
+    testImplementation "org.junit.platform:junit-platform-runner"
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+}
+
+// Setting a JVM parameter to allow blockhound to be running on a JVM version 13 or newer.
+tasks.withType(Test).all {
+    if (JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_13)) {
+        jvmArgs += [
+                "-XX:+AllowRedefinitionToAddDeleteMethods"
+        ]
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
